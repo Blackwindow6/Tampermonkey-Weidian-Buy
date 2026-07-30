@@ -1,0 +1,17 @@
+{
+  "name": "tampermonkey-weidian-buy",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test --test-reporter spec tests/*.test.js",
+    "test:e2e": "node tests/e2e.mjs",
+    "verify:live": "node scripts/verify-live.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "jsdom": "^26.0.0",
+    "playwright-core": "^1.54.0"
+  }
+}

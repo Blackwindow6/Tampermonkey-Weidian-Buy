@@ -1,72 +1,66 @@
-# Tampermonkey-Weidian-Buy
-一个简单的油猴脚本，帮助用户在微店平台购物车页面上自动进行抢购操作。当商品到达结算时间并且按钮可用时，脚本会自动点击结算按钮，提升抢购的成功率。
-## 功能
+# 微店定时结算助手
 
-- 每隔一定时间检查一次商品是否可以购买。
-- 当商品到达购买时间且结算按钮可点击时，自动触发点击事件。
-- 可自定义检查频率和页面 URL。
+一个运行在真实微店购物车页面上的 Tampermonkey 用户脚本。它提供可见的定时面板，持续读取页面当前状态，在目标时间到达且已有商品可结算时，触发一次微店原生结算按钮。
 
-## 安装步骤
+## 当前适配
 
-### 1. 安装油猴插件
+- 购物车入口：`https://weidian.com/new-cart/index.php`
+- 当前生产结构：`.cart_footer_wrap .cart_footer .price_and_btn .go_buy`
+- 已选数量：读取微店按钮文本中的 `结算(n)`
+- 适配确认日期：2026-07-30
 
-首先，您需要安装油猴（Tampermonkey）或 Greasemonkey 插件：
+脚本不会直接请求下单接口，也不会接管账号、地址或支付信息。最终下单结果仍由微店页面和服务端决定。
 
-- [Tampermonkey 插件 (Chrome)](https://tampermonkey.net/)
-- [Greasemonkey 插件 (Firefox)](https://www.greasespot.net/)
+## 安装
 
-### 2. 创建油猴脚本
+1. 安装 [Tampermonkey](https://www.tampermonkey.net/) 浏览器扩展。
+2. 打开 [`weidian-checkout.user.js`](https://raw.githubusercontent.com/Blackwindow6/Tampermonkey-Weidian-Buy/main/weidian-checkout.user.js) 并在 Tampermonkey 安装页确认安装。
+3. 在浏览器中登录微店，打开 `https://weidian.com/new-cart/index.php`。
 
-1. 安装好插件后，点击浏览器插件图标。
-2. 选择 "创建新脚本"。
-3. 在弹出的脚本编辑器中删除默认的代码，将以下代码粘贴进去：
+本地开发版本也可以直接把仓库根目录的 `weidian-checkout.user.js` 导入 Tampermonkey。
 
-```javascript
-// ==UserScript==
-// @name         微店购物车结算脚本
-// @namespace    
-// @version      1
-// @description  微店自动抢
-// @author       Blackwindow6
-// @match        *://weidian.com/new-cart/*
-// @icon         https://s1.ax1x.com/2022/10/14/xwsJYT.png
-// @grant        none
+## 使用
 
-(function() {
-    'use strict';
+1. 在购物车中勾选准备结算的商品。
+2. 在右下角面板设置目标时间，时间精确到秒。
+3. 点击“检测按钮”，确认面板显示的已选商品数正确。
+4. 点击“开始等待”，并保持购物车标签页处于前台。
+5. 到达目标时间后，脚本会在按钮可用时点击一次并自动停止。
 
-    // 设置检查间隔时间（例如每0.1秒检查一次）
-    const checkInterval = 100;  // 每100毫秒检查一次
+若目标时间已过，脚本会立即进入按钮检查状态；若商品尚不可结算，它会持续显示真实原因并继续检查，直到用户停止或按钮可用。
 
-    // 自动结算的函数
-    function autoCheckout() {
-        // 获取结算按钮
-        const checkoutButton = document.querySelector('.go_buy.wd-theme__button1');
+## 状态说明
 
-        // 如果结算按钮存在且没有被禁用，模拟点击操作
-        if (checkoutButton && !checkoutButton.disabled) {
-            console.log('商品可以购买，自动点击结算按钮');
-            
-            // 使用 MouseEvent 模拟点击操作
-            const clickEvent = new MouseEvent('click', {
-                bubbles: true,
-                cancelable: true,
-                view: window
-            });
+| 状态 | 含义 |
+| --- | --- |
+| 等待目标时间 | 页面按钮已检测，尚未到设定时间 |
+| 已到时间，等待可结算 | 时间已到，但未选商品、按钮不可用或页面仍在加载 |
+| 已触发结算 | 已调用微店原生按钮的单次点击 |
+| 运行错误 | 配置无效、出现多个候选按钮或页面结构无法可靠判断 |
 
-            checkoutButton.dispatchEvent(clickEvent);
-        } else {
-            console.log('商品尚未到点或不可购买');
-        }
-    }
+脚本配置保存在 Tampermonkey 存储中。刷新购物车后，目标时间和检查频率仍会保留。
 
-    // 定时器每隔 checkInterval 毫秒调用一次 autoCheckout 函数
-    setInterval(autoCheckout, checkInterval);
-})();
+## 使用边界
 
-### 说明：
-1. **项目名称**：`微店自动抢购脚本`。
-2. **安装步骤**：提供了从安装油猴插件到创建和启用脚本的详细步骤。
-3. **配置选项**：提到检查间隔时间和 URL 匹配的配置，方便用户根据需要修改。
-4. **注意事项**：提醒用户遵循合法和合规的使用规则。
+- 不绕过登录、验证码、风控、库存校验或平台限购。
+- 不自动确认收货地址，不自动付款。
+- 浏览器会限制后台标签页的计时精度，抢购前应保持页面在前台且设备时间准确。
+- 微店改版后若定位失败，面板会明确显示“未找到购物车结算按钮”，不会猜测点击其他元素。
 
+## 开发与验证
+
+```bash
+npm install
+npm run build
+npm test
+npm run test:e2e
+npm run verify:live
+```
+
+- `src/core.js`：时间、配置和状态决策
+- `src/dom.js`：真实购物车按钮识别与点击
+- `src/controller.js`：调度生命周期
+- `src/ui.js`：Shadow DOM 控制面板
+- `demo/index.html`：当前生产 DOM 形状的浏览器演示页
+- `scripts/verify-live.mjs`：线上入口、生产 bundle 和脚本注入烟测
+- `weidian-checkout.user.js`：构建生成、可直接安装和自动更新的用户脚本

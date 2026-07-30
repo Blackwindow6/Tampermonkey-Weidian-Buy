@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>微店购物车测试页</title>
+  <style>
+    * { box-sizing: border-box; letter-spacing: 0; }
+    html, body { min-height: 100%; margin: 0; background: #f4f4f4; color: #222; font-family: "Microsoft YaHei", sans-serif; }
+    body { padding-bottom: 86px; }
+    .phone { width: min(100%, 640px); min-height: 100vh; margin: 0 auto; background: #f5f5f5; box-shadow: 0 0 32px rgba(0, 0, 0, .08); }
+    .topbar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; height: 52px; padding: 0 18px; border-bottom: 1px solid #eee; background: #fff; }
+    .topbar strong { flex: 1; text-align: center; font-size: 17px; }
+    .topbar span { width: 32px; color: #737373; font-size: 14px; }
+    .tabs { display: grid; grid-template-columns: repeat(3, 1fr); height: 46px; background: #fff; color: #737373; font-size: 14px; }
+    .tabs span { display: grid; place-items: center; }
+    .tabs .active { position: relative; color: #222; font-weight: 700; }
+    .tabs .active::after { position: absolute; bottom: 0; width: 20px; height: 3px; border-radius: 2px; background: #e1251b; content: ""; }
+    .notice { margin: 10px 12px 0; padding: 10px 12px; border: 1px solid #ffe1b7; border-radius: 6px; background: #fff7e8; color: #a45a00; font-size: 12px; }
+    .shop { margin: 10px 12px; overflow: hidden; border: 1px solid #ececec; border-radius: 8px; background: #fff; }
+    .shop-head { display: flex; align-items: center; height: 48px; padding: 0 14px; border-bottom: 1px solid #f0f0f0; font-size: 14px; font-weight: 700; }
+    .check { display: grid; width: 20px; height: 20px; margin-right: 10px; place-items: center; border-radius: 50%; background: #e1251b; color: #fff; font-size: 13px; }
+    .product { display: grid; grid-template-columns: 20px 92px 1fr; gap: 10px; padding: 14px; border-bottom: 1px solid #f0f0f0; }
+    .product:last-child { border-bottom: 0; }
+    .product img { width: 92px; height: 92px; border-radius: 6px; object-fit: cover; background: #eee; }
+    .product-info { min-width: 0; }
+    .product-name { margin: 0; overflow: hidden; font-size: 14px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .sku { display: inline-block; margin-top: 7px; padding: 3px 7px; border-radius: 4px; background: #f3f3f3; color: #737373; font-size: 11px; }
+    .price-row { display: flex; align-items: end; margin-top: 22px; }
+    .price { flex: 1; color: #e1251b; font-size: 17px; font-weight: 700; }
+    .quantity { color: #737373; font-size: 12px; }
+    .recommend { padding: 14px 16px 24px; color: #737373; font-size: 13px; }
+    .cart_footer_wrap { position: fixed; right: 0; bottom: 0; left: 50%; z-index: 5; width: min(100%, 640px); height: 76px; transform: translateX(-50%); border-top: 1px solid #e8e8e8; background: #fff; }
+    .cart_footer { position: relative; height: 100%; padding: 10px 14px; }
+    .select_all_wrap { position: absolute; top: 28px; left: 14px; display: flex; align-items: center; font-size: 13px; }
+    .price_and_btn { position: absolute; top: 10px; right: 14px; display: flex; align-items: center; gap: 14px; }
+    .total small { display: block; color: #909399; text-align: right; font-size: 10px; }
+    .total strong { color: #e1251b; font-size: 18px; }
+    .go_buy { display: grid; width: 132px; height: 52px; place-items: center; border-radius: 6px; background: #e1251b; color: #fff; cursor: pointer; font-size: 15px; font-weight: 700; }
+    @media (max-width: 760px) { .phone { box-shadow: none; } .product { grid-template-columns: 20px 76px 1fr; } .product img { width: 76px; height: 76px; } .price-row { margin-top: 10px; } }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <header class="topbar"><span>‹</span><strong>购物车</strong><span>管理</span></header>
+    <nav class="tabs"><span class="active">全部 2</span><span>降价</span><span>常购</span></nav>
+    <p class="notice">两件商品已参与店铺满减，结算时自动计算优惠</p>
+    <section class="shop">
+      <header class="shop-head"><span class="check">✓</span>W STUDIO 精选店</header>
+      <article class="product">
+        <span class="check">✓</span>
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=240&q=80" alt="红色运动鞋">
+        <div class="product-info"><p class="product-name">城市轻量缓震运动鞋</p><span class="sku">炽热红 / 42</span><div class="price-row"><strong class="price">¥ 399</strong><span class="quantity">×1</span></div></div>
+      </article>
+      <article class="product">
+        <span class="check">✓</span>
+        <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=240&q=80" alt="腕表">
+        <div class="product-info"><p class="product-name">简约机械腕表 40mm</p><span class="sku">银色 / 黑色表盘</span><div class="price-row"><strong class="price">¥ 899</strong><span class="quantity">×1</span></div></div>
+      </article>
+    </section>
+    <p class="recommend">猜你喜欢 · 精选好物持续更新</p>
+  </main>
+  <div class="cart_footer_wrap">
+    <div class="cart_footer">
+      <div class="select_all_wrap"><span class="check">✓</span>全选</div>
+      <div class="price_and_btn">
+        <div class="total"><small>合计</small><strong>¥ 1,298</strong></div>
+        <div class="go_buy wd-theme__button1">结算(2)</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    window.__checkoutClicks = 0;
+    const memory = new Map();
+    window.GM_getValue = (key, defaultValue) => memory.has(key) ? memory.get(key) : defaultValue;
+    window.GM_setValue = (key, value) => memory.set(key, value);
+    document.querySelector(".go_buy").addEventListener("click", (event) => {
+      window.__checkoutClicks += 1;
+      event.currentTarget.textContent = "订单确认中";
+    });
+  </script>
+  <script src="../weidian-checkout.user.js"></script>
+</body>
+</html>
